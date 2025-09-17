@@ -1,0 +1,166 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SwasthaPad</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #ffe6f0;
+      margin: 0; padding: 0;
+      display: flex; justify-content: center; align-items: center;
+      height: 100vh;
+    }
+    .container {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 90%; max-width: 500px;
+      padding: 20px;
+      text-align: center;
+      animation: fadeIn 1s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .hidden { display: none; }
+    button {
+      background-color: #ff99cc;
+      border: none;
+      padding: 10px 20px;
+      margin: 10px 5px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: 0.3s;
+    }
+    button:hover {
+      background-color: #ff66b2;
+    }
+    .progress {
+      width: 100%; background: #f3f3f3; border-radius: 8px;
+      height: 10px; margin-bottom: 15px;
+    }
+    .progress-bar {
+      height: 10px; background: #ff66b2; border-radius: 8px; width: 0%;
+      transition: width 0.3s;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="progress"><div class="progress-bar" id="progress-bar"></div></div>
+
+    <!-- Step 1 -->
+    <div class="step" id="step-1">
+      <h1>SwasthaPad</h1>
+      <p>Choose your language</p>
+      <select id="language">
+        <option value="en">English</option>
+        <option value="hi">हिंदी</option>
+        <option value="mr">मराठी</option>
+      </select><br>
+      <button onclick="nextStep()">Next</button>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="step hidden" id="step-2">
+      <h2 id="name-label">Enter your Name</h2>
+      <input type="text" id="name" placeholder="Your Name"/><br>
+      <h2 id="email-label">Enter your Email</h2>
+      <input type="email" id="email" placeholder="Your Email"/><br>
+      <button onclick="prevStep()">Back</button>
+      <button onclick="nextStep()">Next</button>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="step hidden" id="step-3">
+      <h2 id="issue-label">Select your health issue</h2>
+      <select id="issue">
+        <option value="pcod">PCOD/PCOS</option>
+        <option value="cramps">Cramps</option>
+        <option value="pms">PMS</option>
+      </select><br>
+      <button onclick="prevStep()">Back</button>
+      <button onclick="nextStep()">Next</button>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="step hidden" id="step-4">
+      <h2 id="duration-label">Duration</h2>
+      <input type="number" id="duration" min="1" placeholder="Enter number"/>
+      <select id="duration-type">
+        <option value="days">Days</option>
+        <option value="weeks">Weeks</option>
+        <option value="months">Months</option>
+      </select><br>
+      <button onclick="prevStep()">Back</button>
+      <button onclick="nextStep()">Next</button>
+    </div>
+
+    <!-- Step 5 -->
+    <div class="step hidden" id="step-5">
+      <h2 id="summary-label">Summary</h2>
+      <p id="summary"></p>
+      <h3 id="advice-label">Advice</h3>
+      <p id="advice"></p>
+      <button onclick="prevStep()">Back</button>
+      <button onclick="nextStep()">Finish</button>
+    </div>
+
+    <!-- Step 6 -->
+    <div class="step hidden" id="step-6">
+      <h2>Thank you for using SwasthaPad 🌸</h2>
+    </div>
+  </div>
+
+  <script>
+    let currentStep = 1;
+    const totalSteps = 6;
+
+    function updateProgress() {
+      const percent = (currentStep-1) / (totalSteps-1) * 100;
+      document.getElementById("progress-bar").style.width = percent + "%";
+    }
+
+    function showStep(step) {
+      for (let i=1; i<=totalSteps; i++) {
+        document.getElementById("step-" + i).classList.add("hidden");
+      }
+      document.getElementById("step-" + step).classList.remove("hidden");
+      currentStep = step;
+      updateProgress();
+    }
+
+    function nextStep() {
+      if (currentStep === 4) {
+        const name = document.getElementById("name").value;
+        const issue = document.getElementById("issue").value;
+        const duration = document.getElementById("duration").value;
+        const durationType = document.getElementById("duration-type").value;
+        document.getElementById("summary").innerText = 
+          `Name: ${name}\nIssue: ${issue}\nDuration: ${duration} ${durationType}`;
+        document.getElementById("advice").innerText = 
+          issue === "pcod" ? "Eat flax seeds, do yoga." :
+          issue === "cramps" ? "Try hot water bag and gentle exercise." :
+          "Maintain a balanced diet and relax.";
+      }
+      if (currentStep < totalSteps) {
+        showStep(currentStep + 1);
+      }
+    }
+
+    function prevStep() {
+      if (currentStep > 1) {
+        showStep(currentStep - 1);
+      }
+    }
+
+    // Initialize
+    showStep(1);
+  </script>
+</body>
+</html>
